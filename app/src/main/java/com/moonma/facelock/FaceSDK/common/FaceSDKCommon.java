@@ -29,6 +29,20 @@ public class FaceSDKCommon  implements IFaceSDKBaseListener {
         }
     }
 
+    public  void registerFace(String name,Bitmap bmp)
+    {
+        if(faceSDK!=null){
+            faceSDK.registerFace(name,bmp);
+        }
+    }
+
+    public  void deleteAllFace()
+    {
+        if(faceSDK!=null){
+            faceSDK.deleteAllFace();
+        }
+    }
+
     public void setListener(IFaceSDKBaseListener listener)
     {
         iListener = listener;
@@ -47,6 +61,14 @@ public class FaceSDKCommon  implements IFaceSDKBaseListener {
     {
         if(iListener!=null){
             iListener.FaceDidFail(bmp);
+        }
+    }
+
+    @Override
+    public void FaceDidRegister(Bitmap bmp)
+    {
+        if(iListener!=null){
+            iListener.FaceDidRegister(bmp);
         }
     }
 }

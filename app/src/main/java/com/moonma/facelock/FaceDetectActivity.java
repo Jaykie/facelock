@@ -1,6 +1,9 @@
 package com.moonma.facelock;
 
 //import android.app.Application;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -11,13 +14,17 @@ import android.hardware.Camera;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.guo.android_extend.widget.ExtImageView;
 import com.moonma.FaceSDK.FaceSDKBase;
 import com.moonma.FaceSDK.FaceSDKCommon;
 import com.moonma.FaceSDK.FaceDB;
@@ -64,8 +71,9 @@ public class FaceDetectActivity extends AppCompatActivity implements
     private TextView mTextView1;
     private ImageView mImageView;
     private ImageButton mImageButton;
-    private ImageButton btnRegister;
     private ImageButton btnDetect;
+
+
 
     List<Rect> result = new ArrayList<>();
     //FACESDK
@@ -112,24 +120,30 @@ public class FaceDetectActivity extends AppCompatActivity implements
         mImageButton = (ImageButton) findViewById(R.id.imageButton);
         mImageButton.setOnClickListener(this);
 
-        btnRegister = (ImageButton) findViewById(R.id.btnRegister);
-        btnRegister.setOnClickListener(this);
 
         btnDetect = (ImageButton) findViewById(R.id.btnDetect);
         btnDetect.setOnClickListener(this);
 
 
         faceSDKCommon = new FaceSDKCommon();
-        faceSDKCommon.setMode(FaceSDKBase.MODE_PREVIEW);
+        faceSDKCommon.setMode(FaceSDKBase.MODE_DETECT);
         faceSDKCommon.createSDK(Source.FACE_ARC);
         faceSDKCommon.setListener(this);
     }
 
-    void  OnFaceRegister()
-    {
-        faceSDKCommon.setMode(FaceSDKBase.MODE_REGISTR);
-    }
+    private void gotoRegister() {
 
+//            startRegister();
+//            return;
+
+        Intent it = new Intent(this, FaceRegisterActivity.class);//RegisterActivity FaceDetectActivity   class FaceRegisterActivity
+
+        //it.putExtra("Camera", camera);
+        startActivityForResult(it, 3);
+
+
+
+    }
     @Override
     public Camera setupCamera() {
         // TODO Auto-generated method stub
@@ -230,11 +244,9 @@ public class FaceDetectActivity extends AppCompatActivity implements
             mGLSurfaceView.setRenderConfig(mCameraRotate, mCameraMirror);
             mGLSurfaceView.getGLES2Render().setViewDisplay(mCameraMirror, mCameraRotate);
         }
-        if (view.getId() == R.id.btnRegister) {
-            OnFaceRegister();
-        }
+
         if (view.getId() == R.id.btnDetect) {
-            faceSDKCommon.setMode(FaceSDKBase.MODE_DETECT);
+            gotoRegister();
         }
 
 
@@ -283,4 +295,13 @@ public class FaceDetectActivity extends AppCompatActivity implements
                         }
                     });
     }
+
+    @Override
+    public void FaceDidRegister(Bitmap bmp)
+    {
+
+    }
+
+
+
 }

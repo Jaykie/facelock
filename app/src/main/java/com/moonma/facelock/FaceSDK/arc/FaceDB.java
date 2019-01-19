@@ -240,6 +240,28 @@ public class FaceDB {
 		return false;
 	}
 
+
+	public void deleteAll()
+	{
+		if(mRegister.isEmpty())
+		{
+			return;
+		}
+
+		List<String> 	listName = new ArrayList<>();
+		for (FaceRegist frface : mRegister) {
+			listName.add(frface.mName);
+		}
+
+		for (String name : listName) {
+			delete(name);
+		}
+		listName.clear();
+
+
+		mRegister.clear();
+	}
+
 	public boolean upgrade() {
 		return false;
 	}

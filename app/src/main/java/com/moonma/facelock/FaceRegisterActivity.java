@@ -1,5 +1,8 @@
 package com.moonma.facelock;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
@@ -8,9 +11,12 @@ import android.hardware.Camera;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,6 +26,7 @@ import com.guo.android_extend.tools.CameraHelper;
 import com.guo.android_extend.widget.CameraFrameData;
 import com.guo.android_extend.widget.CameraGLSurfaceView;
 import com.guo.android_extend.widget.CameraSurfaceView;
+import com.guo.android_extend.widget.ExtImageView;
 import com.moonma.common.Source;
 
 
@@ -51,7 +58,13 @@ public class FaceRegisterActivity extends AppCompatActivity implements
    FaceSDKCommon faceSDKCommon;
 
     private ImageButton btnCamSelect;
+    private ImageButton btnRegister;
+    private ImageButton btnCancel;
+    private ImageButton btnDelAll;
 
+    private EditText mEditText;
+    private ExtImageView mExtImageView;
+    private static final int REQUEST_CODE_OP = 3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,12 +97,68 @@ public class FaceRegisterActivity extends AppCompatActivity implements
 
         btnCamSelect = (ImageButton) findViewById(R.id.BtnCameraSelect);
         btnCamSelect.setOnClickListener(this);
+        btnRegister = (ImageButton) findViewById(R.id.BtnRegister);
+        btnRegister.setOnClickListener(this);
+
+        btnCancel = (ImageButton) findViewById(R.id.BtnCancel);
+        btnCancel.setOnClickListener(this);
+
+        btnDelAll = (ImageButton) findViewById(R.id.BtnDelAll);
+        btnDelAll.setOnClickListener(this);
+
     }
 
 
     void  OnFaceRegister()
     {
         faceSDKCommon.setMode(FaceSDKBase.MODE_REGISTR);
+    }
+    private void startDetector(int camera) {
+
+//            startRegister();
+//            return;
+
+        Intent it = new Intent(this, FaceDetectActivity.class);//RegisterActivity FaceDetectActivity   class FaceRegisterActivity
+
+        it.putExtra("Camera", camera);
+        startActivityForResult(it, REQUEST_CODE_OP);
+
+
+
+    }
+    void doRegister(Bitmap bmp)
+    {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View layout = inflater.inflate(R.layout.dialog_register, null);
+
+        mEditText = (EditText) layout.findViewById(R.id.editview);
+        mEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
+        mExtImageView = (ExtImageView) layout.findViewById(R.id.extimageview);
+        mExtImageView.setImageBitmap(bmp);
+
+        mExtImageView.setRotation(mCameraRotate);
+        mExtImageView.setScaleY(-mCameraMirror);
+        final  Bitmap bmpFace = bmp;
+
+        new AlertDialog.Builder(this)
+                .setTitle("请输入注册名字")
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setView(layout)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //
+                        faceSDKCommon.registerFace(mEditText.getText().toString(),bmpFace);
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     @Override
@@ -192,13 +261,15 @@ public class FaceRegisterActivity extends AppCompatActivity implements
             mGLSurfaceView.setRenderConfig(mCameraRotate, mCameraMirror);
             mGLSurfaceView.getGLES2Render().setViewDisplay(mCameraMirror, mCameraRotate);
         }
-        if (view.getId() == R.id.btnRegister) {
+        if (view.getId() == R.id.BtnRegister) {
             OnFaceRegister();
         }
-        if (view.getId() == R.id.btnDetect) {
-            faceSDKCommon.setMode(FaceSDKBase.MODE_DETECT);
+        if (view.getId() == R.id.BtnCancel) {
+            startDetector(0);
         }
-
+        if (view.getId() == R.id.BtnDelAll) {
+            faceSDKCommon.deleteAllFace();
+        }
 
     }
     @Override
@@ -226,5 +297,18 @@ public class FaceRegisterActivity extends AppCompatActivity implements
 
             }
         });
+    }
+
+    @Override
+    public void FaceDidRegister(Bitmap bmp)
+    {
+        final Bitmap bmp_show = bmp;
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                doRegister(bmp_show);
+            }
+        });
+
     }
 }

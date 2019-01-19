@@ -70,6 +70,12 @@ public class FaceSDKArc extends FaceSDKBase {
         List<ASAE_FSDKFace> face1 = new ArrayList<>();
         List<ASGE_FSDKFace> face2 = new ArrayList<>();
 
+        public  void registerFace(String name,Bitmap bmp)
+        {
+            MyApplication app = (MyApplication) MyApplication.getAppContext();
+          app.mFaceDB.addFace(name, result, bmp);
+        }
+
         @Override
         public void setup() {
             AFR_FSDKError error = engine.AFR_FSDK_InitialEngine(com.moonma.FaceSDK.FaceDB.appid, com.moonma.FaceSDK.FaceDB.fr_key);
@@ -136,9 +142,10 @@ public class FaceSDKArc extends FaceSDKBase {
                 if(FaceSDKBase.faceMode == FaceSDKBase.MODE_REGISTR)
                 {
                         MyApplication app = (MyApplication) MyApplication.getAppContext();
-                        AFR_FSDKFace sdkface =result;
-                       app.mFaceDB.addFace("moon1234", sdkface, bmp);
-
+                    //   app.mFaceDB.addFace("moon1234", result, bmp);
+                    if(iListener!=null){
+                        iListener.FaceDidRegister(bmp);
+                    }
                     mImageNV21 = null;
                     FaceSDKBase.faceMode = FaceSDKBase.MODE_PREVIEW;
                     return;
@@ -227,7 +234,18 @@ public class FaceSDKArc extends FaceSDKBase {
         mFRAbsLoop.start();
     }
 
+    public  void registerFace(String name,Bitmap bmp)
+    {
+     if(mFRAbsLoop!=null){
+         mFRAbsLoop.registerFace(name,bmp);
+     }
+    }
 
+    public  void deleteAllFace()
+    {
+        MyApplication app = (MyApplication) MyApplication.getAppContext();
+        app.mFaceDB.deleteAll();
+    }
 
     public Object onPreview(byte[] data, int width, int height, int format, long timestamp) {
         AFT_FSDKError err = engine.AFT_FSDK_FaceFeatureDetect(data, width, height, AFT_FSDKEngine.CP_PAF_NV21, result);

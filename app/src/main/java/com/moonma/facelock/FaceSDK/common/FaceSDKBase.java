@@ -1,4 +1,5 @@
 package com.moonma.FaceSDK;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 
 import com.moonma.FaceSDK.IFaceSDKBaseListener;
@@ -21,6 +22,13 @@ public class FaceSDKBase{
     {
        Rect[] rects = new Rect[0];
         return  rects;
+    }
+    public  void registerFace(String name,Bitmap bmp)
+    {
+    }
+    public  void deleteAllFace()
+    {
+
     }
 }
 
