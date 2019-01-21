@@ -16,16 +16,21 @@ import android.os.Environment;
 import android.os.Process;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.moonma.common.Common;
 import com.moonma.common.MyApplication;
+import com.moonma.common.MainActivityBase;
+import com.moonma.common.TabBarItemInfo;
+import com.moonma.common.TabBarViewController;
+import com.moonma.facelock.RegisterViewController;
+import com.moonma.facelock.DetectViewController;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MainActivityBase {
     private final String TAG = this.getClass().toString();
     private static final int REQUEST_CODE_IMAGE_CAMERA = 1;
     private static final int REQUEST_CODE_IMAGE_OP = 2;
@@ -80,14 +85,31 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void startDetector(int camera) {
+TabBarViewController tab = TabBarViewController.main();
+        this.setRootViewController(tab);
+        {
+            TabBarItemInfo info = new TabBarItemInfo();
+            info.title = Common.stringFromResId(R.string.register);
+            info.controller = RegisterViewController.main();
+            tab.addItem(info);
+        }
+
+        {
+            TabBarItemInfo info = new TabBarItemInfo();
+            info.title = Common.stringFromResId(R.string.detect);
+            info.controller = DetectViewController.main();
+            tab.addItem(info);
+        }
+
+        tab.selectItem(0);
 
 //            startRegister();
 //            return;
 
-         Intent it = new Intent(MainActivity.this, FaceRegisterActivity.class);//RegisterActivity FaceDetectActivity   class FaceRegisterActivity
-
-        it.putExtra("Camera", camera);
-        startActivityForResult(it, REQUEST_CODE_OP);
+//         Intent it = new Intent(this, FaceRegisterActivity.class);//RegisterActivity FaceDetectActivity   class FaceRegisterActivity
+//
+//        it.putExtra("Camera", camera);
+//        startActivityForResult(it, REQUEST_CODE_OP);
 
 
 
@@ -125,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startRegister(Bitmap mBitmap, String file) {
-        Intent it = new Intent(MainActivity.this, RegisterActivity.class);
+        Intent it = new Intent(this, RegisterActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("imagePath", file);
         it.putExtras(bundle);
@@ -273,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
             String path = bundle.getString("imagePath");
             Log.i(TAG, "path="+path);
         } else if (requestCode == REQUEST_CODE_IMAGE_CAMERA && resultCode == RESULT_OK) {
-            Uri mPath = ((MyApplication)(MainActivity.this.getApplicationContext())).getCaptureImage();
+            Uri mPath = ((MyApplication)(this.getApplicationContext())).getCaptureImage();
             String file = getPath(mPath);
             Bitmap bmp = MyApplication.decodeImage(file);
             startRegister(bmp, file);
