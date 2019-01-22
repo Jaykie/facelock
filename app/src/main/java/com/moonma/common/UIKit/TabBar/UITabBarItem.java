@@ -38,9 +38,12 @@ public class UITabBarItem extends UIView implements View.OnClickListener {
         void onClickTabBarItem(UITabBarItem item);
     }
 
-    public UITabBarItem(int layoutId) {
-        super(layoutId);
-        textTitle = content.findViewById(R.id.tabbaritem);
+    public UITabBarItem(int layoutId,UIView parent) {
+        super(layoutId, parent);
+        textTitle = content.findViewById(R.id.text_tabbaritem);
+        btnItem = content.findViewById(R.id.btn_tabbaritem);
+        textTitle.setOnClickListener(this);
+        btnItem.setOnClickListener(this);
         content.setOnClickListener(this);
     }
 

@@ -35,14 +35,14 @@ public class MainActivityBase extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        MyApplication.main().setMainActivity(this);
     }
 
     public  ViewGroup getRootContentView()
     {
         ViewGroup contentView = findViewById(android.R.id.content);
-        ViewGroup rootView =(ViewGroup)contentView.getChildAt(0);
-        return  rootView;
+        //ViewGroup rootView =(ViewGroup)contentView.getChildAt(0);
+        return  contentView;
     }
 
     public void setRootViewController(UIViewController controller)

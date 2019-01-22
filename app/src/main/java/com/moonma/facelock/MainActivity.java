@@ -17,7 +17,10 @@ import android.os.Process;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 
 import com.moonma.common.Common;
 import com.moonma.common.MyApplication;
@@ -38,13 +41,14 @@ public class MainActivity extends MainActivityBase {
 
 
     public static int PERMISSION_REQ = 0x123456;
-    private String[] mPermission = new String[] {
+    private String[] mPermission = new String[]{
             Manifest.permission.INTERNET,
             Manifest.permission.CAMERA,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
     private List<String> mRequestPermission = new ArrayList<String>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +62,7 @@ public class MainActivity extends MainActivityBase {
             }
             if (!mRequestPermission.isEmpty()) {
                 this.requestPermissions(mRequestPermission.toArray(new String[mRequestPermission.size()]), PERMISSION_REQ);
-                return ;
+                return;
             }
         }
 
@@ -66,7 +70,7 @@ public class MainActivity extends MainActivityBase {
         startDetector(0);
     }
 
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,  int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         // 版本兼容
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M) {
             return;
@@ -85,7 +89,32 @@ public class MainActivity extends MainActivityBase {
 
 
     private void startDetector(int camera) {
-TabBarViewController tab = TabBarViewController.main();
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+//        Context context = Common.getMainActivity();
+//
+//       // ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+////        ConstraintLayout  content1 = new ConstraintLayout(context);
+////        content1.setLayoutParams(lp1);
+//
+//        ConstraintLayout content1 = (ConstraintLayout) inflater.inflate(R.layout.layout_uiview, getRootContentView(), false);
+//
+//        getRootContentView().addView(content1);
+//
+//
+//        ViewGroup  content= (ViewGroup) inflater.inflate(R.layout.layout_tabbar,content1, false);
+//
+//
+//        ViewGroup.LayoutParams lp =content.getLayoutParams();
+//      //  content.setLayoutParams((lp));
+//       content1.addView(content);
+//
+//
+//      //  tab.view.content.addView(content);
+
+
+         TabBarViewController tab = TabBarViewController.main();
         this.setRootViewController(tab);
         {
             TabBarItemInfo info = new TabBarItemInfo();
@@ -112,24 +141,22 @@ TabBarViewController tab = TabBarViewController.main();
 //        startActivityForResult(it, REQUEST_CODE_OP);
 
 
-
     }
 
-    private void startRegister()
-    {
+    private void startRegister() {
         new AlertDialog.Builder(this)
                 .setTitle("请选择注册方式")
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .setItems(new String[]{"打开图片", "拍摄照片"}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
+                        switch (which) {
                             case 1:
                                 Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
                                 ContentValues values = new ContentValues(1);
                                 values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
                                 Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                                ((MyApplication)(MainActivity.this.getApplicationContext())).setCaptureImage(uri);
+                                ((MyApplication) (MainActivity.this.getApplicationContext())).setCaptureImage(uri);
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                                 startActivityForResult(intent, REQUEST_CODE_IMAGE_CAMERA);
                                 break;
@@ -139,7 +166,8 @@ TabBarViewController tab = TabBarViewController.main();
                                 getImageByalbum.setType("image/jpeg");
                                 startActivityForResult(getImageByalbum, REQUEST_CODE_IMAGE_OP);
                                 break;
-                            default:;
+                            default:
+                                ;
                         }
                     }
                 })
@@ -194,7 +222,7 @@ TabBarViewController tab = TabBarViewController.main();
                     }
 
                     final String selection = "_id=?";
-                    final String[] selectionArgs = new String[] {
+                    final String[] selectionArgs = new String[]{
                             split[1]
                     };
 
@@ -202,7 +230,7 @@ TabBarViewController tab = TabBarViewController.main();
                 }
             }
         }
-        String[] proj = { MediaStore.Images.Media.DATA };
+        String[] proj = {MediaStore.Images.Media.DATA};
         Cursor actualimagecursor = this.getContentResolver().query(uri, proj, null, null, null);
         int actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         actualimagecursor.moveToFirst();
@@ -243,9 +271,9 @@ TabBarViewController tab = TabBarViewController.main();
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
      *
-     * @param context The context.
-     * @param uri The Uri to query.
-     * @param selection (Optional) Filter used in the query.
+     * @param context       The context.
+     * @param uri           The Uri to query.
+     * @param selection     (Optional) Filter used in the query.
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
@@ -280,7 +308,7 @@ TabBarViewController tab = TabBarViewController.main();
             Uri mPath = data.getData();
             String file = getPath(mPath);
             Bitmap bmp = MyApplication.decodeImage(file);
-            if (bmp == null || bmp.getWidth() <= 0 || bmp.getHeight() <= 0 ) {
+            if (bmp == null || bmp.getWidth() <= 0 || bmp.getHeight() <= 0) {
                 Log.e(TAG, "error");
             } else {
                 Log.i(TAG, "bmp [" + bmp.getWidth() + "," + bmp.getHeight());
@@ -293,9 +321,9 @@ TabBarViewController tab = TabBarViewController.main();
             }
             Bundle bundle = data.getExtras();
             String path = bundle.getString("imagePath");
-            Log.i(TAG, "path="+path);
+            Log.i(TAG, "path=" + path);
         } else if (requestCode == REQUEST_CODE_IMAGE_CAMERA && resultCode == RESULT_OK) {
-            Uri mPath = ((MyApplication)(this.getApplicationContext())).getCaptureImage();
+            Uri mPath = ((MyApplication) (this.getApplicationContext())).getCaptureImage();
             String file = getPath(mPath);
             Bitmap bmp = MyApplication.decodeImage(file);
             startRegister(bmp, file);

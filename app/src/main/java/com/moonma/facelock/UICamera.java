@@ -50,8 +50,8 @@ public class UICamera extends UIView
     //FACESDK
     FaceSDKCommon faceSDKCommon;
 
-    public UICamera(int layoutId) {
-        super(layoutId);
+    public UICamera(int layoutId,UIView parent) {
+        super(layoutId,parent);
 
         Activity ac = Common.getMainActivity();
 

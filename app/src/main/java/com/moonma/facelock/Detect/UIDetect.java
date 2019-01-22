@@ -20,8 +20,8 @@ import com.moonma.common.UIView;
  */
 public class UIDetect extends UIView
 {
-    public UIDetect(int layoutId) {
-        super(layoutId);
+    public UIDetect(int layoutId,UIView parent) {
+        super(layoutId,parent);
     }
 
 

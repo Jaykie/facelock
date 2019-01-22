@@ -20,8 +20,8 @@ import com.moonma.common.UIView;
  */
 public class UIRegister extends UIView
 {
-    public UIRegister(int layoutId) {
-        super(layoutId);
+    public UIRegister(int layoutId,UIView parent) {
+        super(layoutId,parent);
     }
 
 

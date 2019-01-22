@@ -16,13 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TabBarViewController extends UIViewController implements UITabBarItem.OnClickTabBarItemListener {
-    static private TabBarViewController _main;
+
 
     UITabBar uiTabBar;
     List<TabBarItemInfo> listItem = new ArrayList<TabBarItemInfo>();
     int selectIndex = -1;
     UIViewController rootController;
 
+    static private TabBarViewController _main;
     public static TabBarViewController main() {
         if (_main == null) {
             _main = new TabBarViewController();
@@ -33,32 +34,17 @@ public class TabBarViewController extends UIViewController implements UITabBarIt
 
     public void ViewDidLoad() {
         super.ViewDidLoad();
-        CreateTabBar();
+        CreateContent();
     }
 
     public void CreateContent() {
-//        string classname = "Content";
-//        objContent = new GameObject(classname);
-//        RectTransform rctran = objContent.AddComponent<RectTransform>();
-//        objContent.transform.parent = objController.transform;
-//        // rctran.sizeDelta = sizeCanvas;
-//
-//        rctran.anchorMin = new Vector2(0, 0);
-//        rctran.anchorMax = new Vector2(1, 1);
-//
-//        rctran.offsetMin = new Vector2(0, 0);
-//        rctran.offsetMax = new Vector2(0, 0);
-    }
-
-    public void CreateTabBar() {
-        CreateContent();
         int retId = R.layout.layout_tabbar;
 
 //        string strPrefab = "Common/Prefab/TabBar/UITabBar";
 //        GameObject obj = (GameObject)Resources.Load(strPrefab);
 //        uiTabBarPrefab = obj.GetComponent<UITabBar>();
 //
-        uiTabBar = new UITabBar(retId);
+        uiTabBar = new UITabBar(retId,view);
         view.addView(uiTabBar);
         uiTabBar.setOnClickListener(this);
 

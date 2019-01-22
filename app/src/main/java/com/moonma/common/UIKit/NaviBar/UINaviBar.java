@@ -20,8 +20,8 @@ import com.moonma.common.UIView;
  */
 public class UINaviBar extends UIView {
 
-    public UINaviBar(int layoutId) {
-        super(layoutId);
+    public UINaviBar(int layoutId,UIView parent) {
+        super(layoutId,parent);
     }
 
 }

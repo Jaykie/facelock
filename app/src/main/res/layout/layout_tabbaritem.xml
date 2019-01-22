@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
 
+    <ImageButton
+        android:id="@+id/btn_tabbaritem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:contentDescription="register"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
     <TextView
-        android:id="@+id/tabbaritem"
+        android:id="@+id/text_tabbaritem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageView1"
         android:layout_centerHorizontal="true"
         android:text="tabbar"
-        android:textColor="@color/colorAccent"/>
+        android:layout_marginBottom="0dp"
+        android:textColor="@color/colorAccent" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

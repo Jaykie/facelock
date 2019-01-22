@@ -40,11 +40,11 @@ public class RegisterViewController extends UIViewController
 //
 
 
-        uiCamera = new UICamera(R.layout.layout_camera);
+        uiCamera = new UICamera(R.layout.layout_camera,this.view);
         view.addView(uiCamera);
 
 
-        ui = new UIRegister(retId);
+        ui = new UIRegister(retId,this.view);
         view.addView(ui);
     }
 }

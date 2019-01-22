@@ -31,12 +31,12 @@ public class DetectViewController extends UIViewController
     public void createContent()
     {
 
-        uiCamera = new UICamera(R.layout.layout_camera);
+        uiCamera = new UICamera(R.layout.layout_camera,this.view);
         view.addView(uiCamera);
 
         int retId = R.layout.layout_detect_view_controller;
 //
-        ui = new UIDetect(retId);
+        ui = new UIDetect(retId,view);
         view.addView(ui);
 
     }

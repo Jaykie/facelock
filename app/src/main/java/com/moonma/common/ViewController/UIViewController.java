@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.moonma.common.UIView;
+import com.moonma.facelock.R;
 
 public class UIViewController {
     public UIView view;
@@ -29,7 +30,8 @@ public class UIViewController {
 
     void CreateView() {
         if (view == null) {
-            view = new UIView();
+         view = new UIView();
+       // view = new UIView(R.layout.layout_uiview,null);
             ViewDidLoad();
         }
 

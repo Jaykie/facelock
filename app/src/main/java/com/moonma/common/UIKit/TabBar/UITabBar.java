@@ -25,13 +25,13 @@ import com.moonma.facelock.R;
 public class UITabBar extends UIView implements UITabBarItem.OnClickTabBarItemListener {
     UITabBarItem uiTabBarItem;
     public UITabBarItem.OnClickTabBarItemListener mOnClickListener;
-    public UITabBar(int layoutId) {
-        super(layoutId);
+    public UITabBar(int layoutId,UIView parent) {
+        super(layoutId, parent);
     }
 
 
     public void CreateTabItem() {
-        uiTabBarItem = new UITabBarItem(R.layout.layout_tabbaritem);
+        uiTabBarItem = new UITabBarItem(R.layout.layout_tabbaritem,this);
         addView(uiTabBarItem);
         uiTabBarItem.setOnClickListener(this);
 //        uiTabBarItem.transform.parent = objLayoutItem.transform;
