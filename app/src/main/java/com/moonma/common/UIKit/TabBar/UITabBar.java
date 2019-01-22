@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
 import com.moonma.common.UIView;
 
 import com.moonma.common.UITabBarItem;
@@ -21,26 +22,36 @@ import com.moonma.facelock.R;
 /**
  * TODO: document your custom view class.
  */
-public class UITabBar extends UIView
-{
+public class UITabBar extends UIView implements UITabBarItem.OnClickTabBarItemListener {
     UITabBarItem uiTabBarItem;
+    public UITabBarItem.OnClickTabBarItemListener mOnClickListener;
     public UITabBar(int layoutId) {
         super(layoutId);
     }
 
 
-    public void CreateTabItem()
-    {
-       uiTabBarItem = new  UITabBarItem(R.layout.layout_tabbaritem);
+    public void CreateTabItem() {
+        uiTabBarItem = new UITabBarItem(R.layout.layout_tabbaritem);
         addView(uiTabBarItem);
+        uiTabBarItem.setOnClickListener(this);
 //        uiTabBarItem.transform.parent = objLayoutItem.transform;
 //        uiTabBarItem.callbackClick = OnUITabBarItemClick;
 
     }
-    public void AddItem(TabBarItemInfo info,int idx)
-    {
+
+    public void AddItem(TabBarItemInfo info, int idx) {
         CreateTabItem();
         uiTabBarItem.index = idx;
         uiTabBarItem.UpdateItem(info);
+    }
+
+    public void setOnClickListener(UITabBarItem.OnClickTabBarItemListener listener) {
+        mOnClickListener = listener;
+    }
+    @Override
+    public void onClickTabBarItem(UITabBarItem item) {
+        if (mOnClickListener != null) {
+            mOnClickListener.onClickTabBarItem(item);
+        }
     }
 }

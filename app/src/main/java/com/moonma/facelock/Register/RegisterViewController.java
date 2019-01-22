@@ -11,6 +11,7 @@ public class RegisterViewController extends UIViewController
 {
 
     UIRegister ui;
+    UICamera uiCamera;
 
     static private RegisterViewController _main;
 
@@ -37,8 +38,13 @@ public class RegisterViewController extends UIViewController
 //        GameObject obj = (GameObject)Resources.Load(strPrefab);
 //        uiTabBarPrefab = obj.GetComponent<UITabBar>();
 //
+
+
+        uiCamera = new UICamera(R.layout.layout_camera);
+        view.addView(uiCamera);
+
+
         ui = new UIRegister(retId);
         view.addView(ui);
-
     }
 }

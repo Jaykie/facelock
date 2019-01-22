@@ -21,25 +21,43 @@ import com.moonma.common.UIViewController;
 import com.moonma.common.TabBarItemInfo;
 import com.moonma.facelock.R;
 
+
 /**
  * TODO: document your custom view class.
  */
-public class UITabBarItem extends UIView {
+public class UITabBarItem extends UIView implements View.OnClickListener {
     //    public Button btnItem;
     public TextView textTitle;
     public ImageButton btnItem;
-
+    public OnClickTabBarItemListener mOnClickListener;
     public int index;
+    int resId;
+
+
+    public interface OnClickTabBarItemListener {
+        void onClickTabBarItem(UITabBarItem item);
+    }
 
     public UITabBarItem(int layoutId) {
         super(layoutId);
         textTitle = content.findViewById(R.id.tabbaritem);
-
+        content.setOnClickListener(this);
     }
 
     public void UpdateItem(TabBarItemInfo info) {
-       // textTitle.setText(info.resIdTitle);
-        CharSequence str = (CharSequence)info.title;
+        // textTitle.setText(info.resIdTitle);
+        CharSequence str = (CharSequence) info.title;
         textTitle.setText(str);
+    }
+
+    public void setOnClickListener(OnClickTabBarItemListener listener) {
+        mOnClickListener = listener;
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (mOnClickListener != null) {
+            mOnClickListener.onClickTabBarItem(this);
+        }
     }
 }

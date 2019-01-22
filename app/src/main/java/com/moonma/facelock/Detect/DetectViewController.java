@@ -10,6 +10,8 @@ import com.moonma.common.UIViewController;
 public class DetectViewController extends UIViewController
 {
     UIDetect ui;
+    UICamera uiCamera;
+
     static private DetectViewController _main;
 
     public static DetectViewController main() {
@@ -28,6 +30,10 @@ public class DetectViewController extends UIViewController
 
     public void createContent()
     {
+
+        uiCamera = new UICamera(R.layout.layout_camera);
+        view.addView(uiCamera);
+
         int retId = R.layout.layout_detect_view_controller;
 //
         ui = new UIDetect(retId);
