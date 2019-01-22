@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">facelockarc</string>
     <string name="section_format">Hello World from section: %1$d</string>
-    <string name="register">register</string>
-    <string name="detect">detect</string>
+    <string name="register">注册</string>
+    <string name="detect">识别</string>
 </resources>

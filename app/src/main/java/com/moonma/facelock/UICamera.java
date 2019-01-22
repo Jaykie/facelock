@@ -17,6 +17,7 @@ import com.guo.android_extend.widget.CameraFrameData;
 import com.guo.android_extend.widget.CameraGLSurfaceView;
 import com.guo.android_extend.widget.CameraSurfaceView;
 import com.moonma.common.Common;
+import com.moonma.common.Device;
 import com.moonma.common.Source;
 import com.moonma.common.UIView;
 
@@ -43,9 +44,9 @@ public class UICamera extends UIView
     private CameraGLSurfaceView mGLSurfaceView;
     private Camera mCamera;
 
-   public int mCameraID;
-    public  int mCameraRotate;
-    public  int mCameraMirror;
+    public int mCameraID;
+    public int mCameraRotate;
+    public int mCameraMirror;
 
     //ui
     ImageButton btnCamSelect;
@@ -55,7 +56,7 @@ public class UICamera extends UIView
     public OnUICameraListener mListener;
 
     public interface OnUICameraListener {
-        public void CameraDidRegisterFace(UICamera ui,Bitmap bmp);
+        public void CameraDidRegisterFace(UICamera ui, Bitmap bmp);
     }
 
     public UICamera(int layoutId, UIView parent) {
@@ -64,10 +65,15 @@ public class UICamera extends UIView
         Activity ac = Common.getMainActivity();
 
         mCameraID = Camera.CameraInfo.CAMERA_FACING_BACK;//ac.getIntent().getIntExtra("Camera", 0) == 0 ? Camera.CameraInfo.CAMERA_FACING_BACK : Camera.CameraInfo.CAMERA_FACING_FRONT;
-        mCameraRotate = 90;//ac.getIntent().getIntExtra("Camera", 0) == 0 ? 90 : 270;
-        mCameraMirror = GLES2Render.MIRROR_NONE;//ac.getIntent().getIntExtra("Camera", 0) == 0 ? GLES2Render.MIRROR_NONE : GLES2Render.MIRROR_X;
+        //ac.getIntent().getIntExtra("Camera", 0) == 0 ? 90 : 270;
+
         mWidth = 1280;
         mHeight = 960;
+
+        updateCameraSize();
+
+        mCameraMirror = GLES2Render.MIRROR_NONE;//ac.getIntent().getIntExtra("Camera", 0) == 0 ? GLES2Render.MIRROR_NONE : GLES2Render.MIRROR_X;
+
         mFormat = ImageFormat.NV21;
         // mHandler = new Handler();
 
@@ -78,31 +84,47 @@ public class UICamera extends UIView
         mSurfaceView.setupGLSurafceView(mGLSurfaceView, true, mCameraMirror, mCameraRotate);
         mSurfaceView.debug_print_fps(true, false);
 
+        if(!Device.isEmulator()){
+            faceSDKCommon = new FaceSDKCommon();
+            faceSDKCommon.setMode(FaceSDKBase.MODE_PREVIEW);
+            faceSDKCommon.createSDK(Source.FACE_ARC);
+            faceSDKCommon.setListener(this);
+        }
 
-//        faceSDKCommon = new FaceSDKCommon();
-//        faceSDKCommon.setMode(FaceSDKBase.MODE_PREVIEW);
-//        faceSDKCommon.createSDK(Source.FACE_ARC);
-//        faceSDKCommon.setListener(this);
+
 
 
         btnCamSelect = (ImageButton) findViewById(R.id.BtnCameraSelect);
         btnCamSelect.setOnClickListener(this);
-//        btnRegister = (ImageButton) findViewById(R.id.BtnRegister);
-//        btnRegister.setOnClickListener(this);
-//
-//        btnCancel = (ImageButton) findViewById(R.id.BtnCancel);
-//        btnCancel.setOnClickListener(this);
-//
-//        btnDelAll = (ImageButton) findViewById(R.id.BtnDelAll);
-//        btnDelAll.setOnClickListener(this);
+
     }
 
     public void setUICameraListener(OnUICameraListener listener) {
         mListener = listener;
     }
+
     public void setMode(int mode) {
         if (faceSDKCommon != null) {
             faceSDKCommon.setMode(mode);
+        }
+    }
+
+    public void updateCameraSize( ) {
+        if (mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            mCameraRotate = 270;
+            mCameraMirror = GLES2Render.MIRROR_X;
+            if(Device.isLandscape())
+            {
+                mCameraRotate = 180;
+            }
+        } else {
+            mCameraRotate = 90;
+            mCameraMirror = GLES2Render.MIRROR_NONE;
+
+            if(Device.isLandscape())
+            {
+                mCameraRotate = 0;
+            }
         }
     }
 
@@ -196,26 +218,16 @@ public class UICamera extends UIView
         if (view.getId() == R.id.BtnCameraSelect) {
             if (mCameraID == Camera.CameraInfo.CAMERA_FACING_BACK) {
                 mCameraID = Camera.CameraInfo.CAMERA_FACING_FRONT;
-                mCameraRotate = 270;
-                mCameraMirror = GLES2Render.MIRROR_X;
             } else {
                 mCameraID = Camera.CameraInfo.CAMERA_FACING_BACK;
-                mCameraRotate = 90;
-                mCameraMirror = GLES2Render.MIRROR_NONE;
             }
+
+            updateCameraSize();
             mSurfaceView.resetCamera();
             mGLSurfaceView.setRenderConfig(mCameraRotate, mCameraMirror);
             mGLSurfaceView.getGLES2Render().setViewDisplay(mCameraMirror, mCameraRotate);
         }
-        if (view.getId() == R.id.BtnRegister) {
-            //  OnFaceRegister();
-        }
-        if (view.getId() == R.id.BtnCancel) {
-            //  startDetector(0);
-        }
-        if (view.getId() == R.id.BtnDelAll) {
-            FaceDBCommon.main().deleteAllFace();
-        }
+
 
     }
 
@@ -256,9 +268,8 @@ public class UICamera extends UIView
             public void run() {
 
                 // doRegister(bmp_show);
-                if(mListener!=null)
-                {
-                    mListener.CameraDidRegisterFace(ui,bmp_show);
+                if (mListener != null) {
+                    mListener.CameraDidRegisterFace(ui, bmp_show);
                 }
             }
         });
