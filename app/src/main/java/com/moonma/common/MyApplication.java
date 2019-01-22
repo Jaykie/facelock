@@ -18,8 +18,8 @@ import com.moonma.FaceSDK.FaceDB;
 
 public class MyApplication extends android.app.Application {
     private final String TAG = this.getClass().toString();
-    public FaceDB mFaceDB;
-    Uri mImage;
+//    public FaceDB mFaceDB;
+//    Uri mImage;
     private static Context context;
     private Activity mainActivity;
 
@@ -93,13 +93,7 @@ public class MyApplication extends android.app.Application {
 //		mImage = null;
     }
 
-    public void setCaptureImage(Uri uri) {
-        mImage = uri;
-    }
 
-    public Uri getCaptureImage() {
-        return mImage;
-    }
 
     /**
      * @param path

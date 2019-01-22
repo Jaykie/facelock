@@ -25,10 +25,13 @@ import android.view.ViewGroup;
 import com.moonma.common.Common;
 import com.moonma.common.MyApplication;
 import com.moonma.common.MainActivityBase;
+import com.moonma.common.Source;
 import com.moonma.common.TabBarItemInfo;
 import com.moonma.common.TabBarViewController;
 import com.moonma.facelock.RegisterViewController;
 import com.moonma.facelock.DetectViewController;
+import com.moonma.FaceSDK.FaceDBCommon;
+import com.moonma.FaceSDK.FaceSDKCommon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +56,8 @@ public class MainActivity extends MainActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        FaceDBCommon.main().createSDK(Source.FACE_ARC);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             for (String one : mPermission) {
@@ -114,7 +119,13 @@ public class MainActivity extends MainActivityBase {
 //      //  tab.view.content.addView(content);
 
 
-         TabBarViewController tab = TabBarViewController.main();
+        TabBarViewController tab = TabBarViewController.main();
+
+        tab.resIdLayoutTabBar = R.layout.layout_tabbar;
+        tab.resIdLayoutTabItem = R.layout.layout_tabbaritem;
+        tab.resIdTabItemBtn = R.id.btn_tabbaritem;
+        tab.resIdTabItemText = R.id.text_tabbaritem;
+
         this.setRootViewController(tab);
         {
             TabBarItemInfo info = new TabBarItemInfo();
@@ -156,7 +167,8 @@ public class MainActivity extends MainActivityBase {
                                 ContentValues values = new ContentValues(1);
                                 values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
                                 Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                                ((MyApplication) (MainActivity.this.getApplicationContext())).setCaptureImage(uri);
+                                //  ((MyApplication) (MainActivity.this.getApplicationContext())).setCaptureImage(uri);
+                                FaceSDKCommon.main().setCaptureImage(uri);
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                                 startActivityForResult(intent, REQUEST_CODE_IMAGE_CAMERA);
                                 break;
@@ -323,7 +335,8 @@ public class MainActivity extends MainActivityBase {
             String path = bundle.getString("imagePath");
             Log.i(TAG, "path=" + path);
         } else if (requestCode == REQUEST_CODE_IMAGE_CAMERA && resultCode == RESULT_OK) {
-            Uri mPath = ((MyApplication) (this.getApplicationContext())).getCaptureImage();
+            // Uri mPath = ((MyApplication) (this.getApplicationContext())).getCaptureImage();
+            Uri mPath = FaceSDKCommon.main().getCaptureImage();
             String file = getPath(mPath);
             Bitmap bmp = MyApplication.decodeImage(file);
             startRegister(bmp, file);

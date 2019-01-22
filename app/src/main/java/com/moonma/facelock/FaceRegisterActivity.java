@@ -33,6 +33,8 @@ import com.moonma.common.Source;
 import com.moonma.FaceSDK.FaceSDKBase;
 import com.moonma.FaceSDK.FaceSDKCommon;
 import com.moonma.FaceSDK.FaceDB;
+import com.moonma.FaceSDK.FaceDBCommon;
+
 
 import java.util.List;
 
@@ -148,7 +150,7 @@ public class FaceRegisterActivity extends AppCompatActivity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //
-                        faceSDKCommon.registerFace(mEditText.getText().toString(),bmpFace);
+                        FaceDBCommon.main().registerFace(mEditText.getText().toString(),bmpFace);
                         dialog.dismiss();
                     }
                 })
@@ -268,7 +270,7 @@ public class FaceRegisterActivity extends AppCompatActivity implements
             startDetector(0);
         }
         if (view.getId() == R.id.BtnDelAll) {
-            faceSDKCommon.deleteAllFace();
+            FaceDBCommon.main().deleteAllFace();
         }
 
     }

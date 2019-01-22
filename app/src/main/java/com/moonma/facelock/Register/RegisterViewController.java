@@ -46,5 +46,7 @@ public class RegisterViewController extends UIViewController
 
         ui = new UIRegister(retId,this.view);
         view.addView(ui);
+
+        ui.uiCamera = uiCamera;
     }
 }

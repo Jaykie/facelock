@@ -1,17 +1,40 @@
 package com.moonma.FaceSDK;
+import com.moonma.common.Common;
 import com.moonma.common.Source;
 import com.moonma.FaceSDK.IFaceSDKBaseListener;
 import com.moonma.FaceSDK.FaceSDKArc;
 import com.moonma.FaceSDK.FaceSDKOpenAiLab;
 import com.moonma.FaceSDK.FaceSDKBase;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Log;
 
 public class FaceSDKCommon  implements IFaceSDKBaseListener {
 
     FaceSDKBase faceSDK;
      IFaceSDKBaseListener iListener;
+
+    Uri mImage = null;
+
+    static private FaceSDKCommon _main;
+    public static FaceSDKCommon main() {
+        if (_main == null) {
+            _main = new FaceSDKCommon();
+        }
+        return _main;
+    }
+    public void setCaptureImage(Uri uri) {
+        mImage = uri;
+    }
+
+    public Uri getCaptureImage() {
+        return mImage;
+    }
+    public void InitFaceDB() {
+
+    }
     public void setMode(int mode)
     {
         FaceSDKBase.faceMode = mode;
@@ -29,19 +52,7 @@ public class FaceSDKCommon  implements IFaceSDKBaseListener {
         }
     }
 
-    public  void registerFace(String name,Bitmap bmp)
-    {
-        if(faceSDK!=null){
-            faceSDK.registerFace(name,bmp);
-        }
-    }
 
-    public  void deleteAllFace()
-    {
-        if(faceSDK!=null){
-            faceSDK.deleteAllFace();
-        }
-    }
 
     public void setListener(IFaceSDKBaseListener listener)
     {

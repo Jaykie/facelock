@@ -1,16 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/text_register_viewcontroller"
+
+    <ImageView
+        android:id="@+id/ImageFaceBg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:contentDescription="facebg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.44"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/face_bg" />
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="0dp"
-        android:text="register_viewcontroller"
-        android:textColor="@color/colorPrimaryDark" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-</LinearLayout>
+        <ImageButton
+            android:id="@+id/BtnRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="register"
+            app:srcCompat="@android:drawable/ic_input_add" />
+
+
+
+        <ImageButton
+            android:id="@+id/BtnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="cancel"
+            app:srcCompat="@android:drawable/ic_delete" />
+
+        <ImageButton
+            android:id="@+id/BtnDelAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="cancel"
+            app:srcCompat="@android:drawable/ic_menu_delete" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.54"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.51">
+
+        <TextView
+            android:id="@+id/TextTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:text="title"
+            android:textAlignment="center"
+            android:textColor="@android:color/holo_red_light" />
+
+        <TextView
+            android:id="@+id/TextDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="detail"
+            android:text="detail"
+            android:textAlignment="center"
+            android:textColor="@android:color/holo_orange_light" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

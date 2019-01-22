@@ -289,7 +289,7 @@ public class RegisterActivity extends Activity implements SurfaceHolder.Callback
 							.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
-									((MyApplication)RegisterActivity.this.getApplicationContext()).mFaceDB.addFace(mEditText.getText().toString(), mAFR_FSDKFace, face);
+								//	((MyApplication)RegisterActivity.this.getApplicationContext()).mFaceDB.addFace(mEditText.getText().toString(), mAFR_FSDKFace, face);
 									mRegisterViewAdapter.notifyDataSetChanged();
 									dialog.dismiss();
 								}
@@ -334,7 +334,8 @@ public class RegisterActivity extends Activity implements SurfaceHolder.Callback
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return ((MyApplication)mContext.getApplicationContext()).mFaceDB.mRegister.size();
+			return  1;
+			//return ((MyApplication)mContext.getApplicationContext()).mFaceDB.mRegister.size();
 		}
 
 		@Override
@@ -363,15 +364,15 @@ public class RegisterActivity extends Activity implements SurfaceHolder.Callback
 				convertView.setTag(holder);
 			}
 
-			if (!((MyApplication)mContext.getApplicationContext()).mFaceDB.mRegister.isEmpty()) {
-				FaceDB.FaceRegist face = ((MyApplication) mContext.getApplicationContext()).mFaceDB.mRegister.get(position);
-				holder.tv.setText(face.mName);
-				String keyPath = face.mFaceList.keySet().iterator().next();
-                holder.siv.setImageBitmap(BitmapFactory.decodeFile(keyPath));
-				holder.siv.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-				//holder.siv.setImageResource(R.mipmap.ic_launcher);
-				convertView.setWillNotDraw(false);
-			}
+//			if (!((MyApplication)mContext.getApplicationContext()).mFaceDB.mRegister.isEmpty()) {
+//				FaceDB.FaceRegist face = ((MyApplication) mContext.getApplicationContext()).mFaceDB.mRegister.get(position);
+//				holder.tv.setText(face.mName);
+//				String keyPath = face.mFaceList.keySet().iterator().next();
+//                holder.siv.setImageBitmap(BitmapFactory.decodeFile(keyPath));
+//				holder.siv.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+//				//holder.siv.setImageResource(R.mipmap.ic_launcher);
+//				convertView.setWillNotDraw(false);
+//			}
 
 			return convertView;
 		}
@@ -379,29 +380,29 @@ public class RegisterActivity extends Activity implements SurfaceHolder.Callback
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			Log.d("onItemClick", "onItemClick = " + position + "pos=" + mHListView.getScroll());
-			final String name = ((MyApplication)mContext.getApplicationContext()).mFaceDB.mRegister.get(position).mName;
-			final int count = ((MyApplication)mContext.getApplicationContext()).mFaceDB.mRegister.get(position).mFaceList.size();
-			final Map<String, AFR_FSDKFace> face = ((MyApplication)mContext.getApplicationContext()).mFaceDB.mRegister.get(position).mFaceList;
-			new AlertDialog.Builder(RegisterActivity.this)
-					.setTitle("删除注册名:" + name)
-					.setMessage("包含:" + count + "个注册人脸特征信息")
-					.setView(new ListView(mContext))
-					.setIcon(android.R.drawable.ic_dialog_alert)
-					.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							((MyApplication)mContext.getApplicationContext()).mFaceDB.delete(name);
-							mRegisterViewAdapter.notifyDataSetChanged();
-							dialog.dismiss();
-						}
-					})
-					.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					})
-					.show();
+//			final String name = ((MyApplication)mContext.getApplicationContext()).mFaceDB.mRegister.get(position).mName;
+//			final int count = ((MyApplication)mContext.getApplicationContext()).mFaceDB.mRegister.get(position).mFaceList.size();
+//			final Map<String, AFR_FSDKFace> face = ((MyApplication)mContext.getApplicationContext()).mFaceDB.mRegister.get(position).mFaceList;
+//			new AlertDialog.Builder(RegisterActivity.this)
+//					.setTitle("删除注册名:" + name)
+//					.setMessage("包含:" + count + "个注册人脸特征信息")
+//					.setView(new ListView(mContext))
+//					.setIcon(android.R.drawable.ic_dialog_alert)
+//					.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//						@Override
+//						public void onClick(DialogInterface dialog, int which) {
+//							((MyApplication)mContext.getApplicationContext()).mFaceDB.delete(name);
+//							mRegisterViewAdapter.notifyDataSetChanged();
+//							dialog.dismiss();
+//						}
+//					})
+//					.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//						@Override
+//						public void onClick(DialogInterface dialog, int which) {
+//							dialog.dismiss();
+//						}
+//					})
+//					.show();
 		}
 	}
 }

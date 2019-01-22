@@ -42,6 +42,8 @@ public class FaceDB {
 	AFR_FSDKVersion mFRVersion;
 	boolean mUpgrade;
 
+	AFR_FSDKFace faceResult;
+
 	public class FaceRegist {
 		public String mName;
 		public Map<String, AFR_FSDKFace> mFaceList;
@@ -52,7 +54,27 @@ public class FaceDB {
 		}
 	}
 
-	public FaceDB(String path) {
+	static private FaceDB _main;
+	public static FaceDB main() {
+		if (_main == null) {
+			_main = new FaceDB();
+		}
+		return _main;
+	}
+
+	public FaceDB()
+	{
+
+	}
+
+	public void setFaceResult(AFR_FSDKFace face)
+	{
+		faceResult = face;
+	}
+
+
+	public void initPath(String path)
+	{
 		mDBPath = path;
 		mRegister = new ArrayList<>();
 		mFRVersion = new AFR_FSDKVersion();

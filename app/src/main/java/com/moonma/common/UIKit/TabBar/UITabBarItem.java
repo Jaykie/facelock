@@ -19,8 +19,7 @@ import com.moonma.common.UIView;
 import com.moonma.common.UIViewController;
 
 import com.moonma.common.TabBarItemInfo;
-import com.moonma.facelock.R;
-
+import com.moonma.common.TabBarViewController;
 
 /**
  * TODO: document your custom view class.
@@ -40,8 +39,8 @@ public class UITabBarItem extends UIView implements View.OnClickListener {
 
     public UITabBarItem(int layoutId,UIView parent) {
         super(layoutId, parent);
-        textTitle = content.findViewById(R.id.text_tabbaritem);
-        btnItem = content.findViewById(R.id.btn_tabbaritem);
+        textTitle = content.findViewById(TabBarViewController.main().resIdTabItemText);
+        btnItem = content.findViewById(TabBarViewController.main().resIdTabItemBtn);
         textTitle.setOnClickListener(this);
         btnItem.setOnClickListener(this);
         content.setOnClickListener(this);

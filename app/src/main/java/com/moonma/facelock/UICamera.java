@@ -24,6 +24,8 @@ import com.moonma.FaceSDK.FaceSDKBase;
 import com.moonma.FaceSDK.IFaceSDKBaseListener;
 import com.moonma.FaceSDK.FaceSDKCommon;
 import com.moonma.FaceSDK.FaceDB;
+import com.moonma.FaceSDK.FaceDBCommon;
+import com.moonma.FaceSDK.IFaceDBBaseListener;
 
 import java.util.List;
 
@@ -32,8 +34,7 @@ public class UICamera extends UIView
         CameraSurfaceView.OnCameraListener,
         View.OnTouchListener,
         Camera.AutoFocusCallback, View.OnClickListener,
-        IFaceSDKBaseListener
-{
+        IFaceSDKBaseListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -42,22 +43,29 @@ public class UICamera extends UIView
     private CameraGLSurfaceView mGLSurfaceView;
     private Camera mCamera;
 
-    int mCameraID;
-    int mCameraRotate;
-    int mCameraMirror;
+   public int mCameraID;
+    public  int mCameraRotate;
+    public  int mCameraMirror;
 
+    //ui
+    ImageButton btnCamSelect;
 
     //FACESDK
     FaceSDKCommon faceSDKCommon;
+    public OnUICameraListener mListener;
 
-    public UICamera(int layoutId,UIView parent) {
-        super(layoutId,parent);
+    public interface OnUICameraListener {
+        public void CameraDidRegisterFace(UICamera ui,Bitmap bmp);
+    }
+
+    public UICamera(int layoutId, UIView parent) {
+        super(layoutId, parent);
 
         Activity ac = Common.getMainActivity();
 
         mCameraID = Camera.CameraInfo.CAMERA_FACING_BACK;//ac.getIntent().getIntExtra("Camera", 0) == 0 ? Camera.CameraInfo.CAMERA_FACING_BACK : Camera.CameraInfo.CAMERA_FACING_FRONT;
         mCameraRotate = 90;//ac.getIntent().getIntExtra("Camera", 0) == 0 ? 90 : 270;
-        mCameraMirror = GLES2Render.MIRROR_NONE ;//ac.getIntent().getIntExtra("Camera", 0) == 0 ? GLES2Render.MIRROR_NONE : GLES2Render.MIRROR_X;
+        mCameraMirror = GLES2Render.MIRROR_NONE;//ac.getIntent().getIntExtra("Camera", 0) == 0 ? GLES2Render.MIRROR_NONE : GLES2Render.MIRROR_X;
         mWidth = 1280;
         mHeight = 960;
         mFormat = ImageFormat.NV21;
@@ -71,16 +79,14 @@ public class UICamera extends UIView
         mSurfaceView.debug_print_fps(true, false);
 
 
-
-
 //        faceSDKCommon = new FaceSDKCommon();
 //        faceSDKCommon.setMode(FaceSDKBase.MODE_PREVIEW);
 //        faceSDKCommon.createSDK(Source.FACE_ARC);
 //        faceSDKCommon.setListener(this);
 
 
-//        btnCamSelect = (ImageButton) findViewById(R.id.BtnCameraSelect);
-//        btnCamSelect.setOnClickListener(this);
+        btnCamSelect = (ImageButton) findViewById(R.id.BtnCameraSelect);
+        btnCamSelect.setOnClickListener(this);
 //        btnRegister = (ImageButton) findViewById(R.id.BtnRegister);
 //        btnRegister.setOnClickListener(this);
 //
@@ -91,7 +97,14 @@ public class UICamera extends UIView
 //        btnDelAll.setOnClickListener(this);
     }
 
-
+    public void setUICameraListener(OnUICameraListener listener) {
+        mListener = listener;
+    }
+    public void setMode(int mode) {
+        if (faceSDKCommon != null) {
+            faceSDKCommon.setMode(mode);
+        }
+    }
 
     @Override
     public Camera setupCamera() {
@@ -102,15 +115,15 @@ public class UICamera extends UIView
             parameters.setPreviewSize(mWidth, mHeight);
             parameters.setPreviewFormat(mFormat);
 
-            for( Camera.Size size : parameters.getSupportedPreviewSizes()) {
+            for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
                 Log.d(TAG, "SIZE:" + size.width + "x" + size.height);
             }
-            for( Integer format : parameters.getSupportedPreviewFormats()) {
+            for (Integer format : parameters.getSupportedPreviewFormats()) {
                 Log.d(TAG, "FORMAT:" + format);
             }
 
             List<int[]> fps = parameters.getSupportedPreviewFpsRange();
-            for(int[] count : fps) {
+            for (int[] count : fps) {
                 Log.d(TAG, "T:");
                 for (int data : count) {
                     Log.d(TAG, "V=" + data);
@@ -145,15 +158,14 @@ public class UICamera extends UIView
     }
 
 
-
     @Override
     public Object onPreview(byte[] data, int width, int height, int format, long timestamp) {
 
-        if(faceSDKCommon!=null){
-            return  faceSDKCommon.onPreview(data,width,height,format,timestamp);
+        if (faceSDKCommon != null) {
+            return faceSDKCommon.onPreview(data, width, height, format, timestamp);
         }
         Rect[] rects = new Rect[0];
-        return  rects;
+        return rects;
     }
 
     @Override
@@ -163,7 +175,7 @@ public class UICamera extends UIView
 
     @Override
     public void onAfterRender(CameraFrameData data) {
-        mGLSurfaceView.getGLES2Render().draw_rect((Rect[])data.getParams(), Color.GREEN, 2);
+        mGLSurfaceView.getGLES2Render().draw_rect((Rect[]) data.getParams(), Color.GREEN, 2);
     }
 
     @Override
@@ -196,18 +208,19 @@ public class UICamera extends UIView
             mGLSurfaceView.getGLES2Render().setViewDisplay(mCameraMirror, mCameraRotate);
         }
         if (view.getId() == R.id.BtnRegister) {
-          //  OnFaceRegister();
+            //  OnFaceRegister();
         }
         if (view.getId() == R.id.BtnCancel) {
-          //  startDetector(0);
+            //  startDetector(0);
         }
         if (view.getId() == R.id.BtnDelAll) {
-            faceSDKCommon.deleteAllFace();
+            FaceDBCommon.main().deleteAllFace();
         }
 
     }
+
     @Override
-    public void FaceDidDetect(String name, float score , Bitmap bmp){
+    public void FaceDidDetect(String name, float score, Bitmap bmp) {
 
 //        mHandler.removeCallbacks(hide);
 //        final String mNameShow = name;
@@ -220,9 +233,9 @@ public class UICamera extends UIView
 //            }
 //        });
     }
+
     @Override
-    public void FaceDidFail(Bitmap bmp)
-    {
+    public void FaceDidFail(Bitmap bmp) {
         final String mNameShow = "未识别";
         final Bitmap bmp_show = bmp;
         Activity ac = Common.getMainActivity();
@@ -235,16 +248,22 @@ public class UICamera extends UIView
     }
 
     @Override
-    public void FaceDidRegister(Bitmap bmp)
-    {
+    public void FaceDidRegister(Bitmap bmp) {
         final Bitmap bmp_show = bmp;
+        final UICamera ui = this;
         Common.getMainActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
-               // doRegister(bmp_show);
+                // doRegister(bmp_show);
+                if(mListener!=null)
+                {
+                    mListener.CameraDidRegisterFace(ui,bmp_show);
+                }
             }
         });
 
     }
+
+
 }

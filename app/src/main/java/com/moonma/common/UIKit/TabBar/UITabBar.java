@@ -13,11 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.moonma.common.TabBarViewController;
 import com.moonma.common.UIView;
 
 import com.moonma.common.UITabBarItem;
 import com.moonma.common.TabBarItemInfo;
-import com.moonma.facelock.R;
 
 /**
  * TODO: document your custom view class.
@@ -31,7 +31,7 @@ public class UITabBar extends UIView implements UITabBarItem.OnClickTabBarItemLi
 
 
     public void CreateTabItem() {
-        uiTabBarItem = new UITabBarItem(R.layout.layout_tabbaritem,this);
+        uiTabBarItem = new UITabBarItem(TabBarViewController.main().resIdLayoutTabItem,this);
         addView(uiTabBarItem);
         uiTabBarItem.setOnClickListener(this);
 //        uiTabBarItem.transform.parent = objLayoutItem.transform;

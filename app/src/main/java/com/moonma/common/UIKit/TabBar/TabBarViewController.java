@@ -10,8 +10,6 @@ import com.moonma.common.UITabBar;
 import com.moonma.common.TabBarItemInfo;
 import com.moonma.common.UITabBarItem;
 
-import com.moonma.facelock.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +20,10 @@ public class TabBarViewController extends UIViewController implements UITabBarIt
     List<TabBarItemInfo> listItem = new ArrayList<TabBarItemInfo>();
     int selectIndex = -1;
     UIViewController rootController;
+    public int resIdLayoutTabBar;
+    public int resIdTabItemText;
+    public int resIdTabItemBtn;
+    public int resIdLayoutTabItem;
 
     static private TabBarViewController _main;
     public static TabBarViewController main() {
@@ -38,13 +40,13 @@ public class TabBarViewController extends UIViewController implements UITabBarIt
     }
 
     public void CreateContent() {
-        int retId = R.layout.layout_tabbar;
+
 
 //        string strPrefab = "Common/Prefab/TabBar/UITabBar";
 //        GameObject obj = (GameObject)Resources.Load(strPrefab);
 //        uiTabBarPrefab = obj.GetComponent<UITabBar>();
 //
-        uiTabBar = new UITabBar(retId,view);
+        uiTabBar = new UITabBar(resIdLayoutTabBar,view);
         view.addView(uiTabBar);
         uiTabBar.setOnClickListener(this);
 

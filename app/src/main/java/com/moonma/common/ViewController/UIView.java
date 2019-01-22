@@ -24,7 +24,7 @@ public class UIView {
         content.setLayoutParams(lp);
     }
 
-    public UIView(int layoutId, UIView parent ) {
+    public UIView(int layoutId, UIView parent) {
         //  super(context);
         // Context context = Common.appContext();
         //必须用MainActivity，用appContext的话ui layout 显示会出问题
@@ -58,4 +58,10 @@ public class UIView {
 
         content.addView(child.content);
     }
+
+    public final <T extends View> T findViewById(int id) {
+        return content.findViewById(id);
+    }
+
+
 }

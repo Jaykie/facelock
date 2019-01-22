@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.moonma.common.UIView;
+import com.moonma.facelock.UICamera;
 
 
 /**
@@ -20,6 +21,7 @@ import com.moonma.common.UIView;
  */
 public class UIDetect extends UIView
 {
+    public UICamera uiCamera;
     public UIDetect(int layoutId,UIView parent) {
         super(layoutId,parent);
     }

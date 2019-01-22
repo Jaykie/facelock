@@ -23,12 +23,6 @@ public class FaceSDKBase{
        Rect[] rects = new Rect[0];
         return  rects;
     }
-    public  void registerFace(String name,Bitmap bmp)
-    {
-    }
-    public  void deleteAllFace()
-    {
 
-    }
 }
 

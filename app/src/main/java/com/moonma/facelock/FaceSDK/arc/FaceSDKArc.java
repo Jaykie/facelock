@@ -1,10 +1,13 @@
 package com.moonma.FaceSDK;
+
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 
@@ -30,6 +33,7 @@ import com.arcsoft.genderestimation.ASGE_FSDKVersion;
 import com.guo.android_extend.java.AbsLoop;
 import com.guo.android_extend.java.ExtByteArrayOutputStream;
 import com.moonma.FaceSDK.IFaceSDKBaseListener;
+import com.moonma.common.Common;
 import com.moonma.common.MyApplication;
 
 import java.io.IOException;
@@ -61,20 +65,15 @@ public class FaceSDKArc extends FaceSDKBase {
     int mCameraMirror;
     private int mWidth, mHeight, mFormat;
 
-    class FRAbsLoop extends AbsLoop {
 
+    class FRAbsLoop extends AbsLoop {
         AFR_FSDKVersion version = new AFR_FSDKVersion();
         AFR_FSDKEngine engine = new AFR_FSDKEngine();
         AFR_FSDKFace result = new AFR_FSDKFace();
-      List<FaceDB.FaceRegist> mResgist = ((MyApplication) MyApplication.getAppContext()).mFaceDB.mRegister;
+        List<FaceDB.FaceRegist> mResgist = FaceDB.main().mRegister;
         List<ASAE_FSDKFace> face1 = new ArrayList<>();
         List<ASGE_FSDKFace> face2 = new ArrayList<>();
 
-        public  void registerFace(String name,Bitmap bmp)
-        {
-            MyApplication app = (MyApplication) MyApplication.getAppContext();
-          app.mFaceDB.addFace(name, result, bmp);
-        }
 
         @Override
         public void setup() {
@@ -82,18 +81,19 @@ public class FaceSDKArc extends FaceSDKBase {
             Log.d(TAG, "AFR_FSDK_InitialEngine = " + error.getCode());
             error = engine.AFR_FSDK_GetVersion(version);
             Log.d(TAG, "FR=" + version.toString() + "," + error.getCode()); //(210, 178 - 478, 446), degree = 1　780, 2208 - 1942, 3370
+
+            //@moon
+            FaceDB.main().setFaceResult(result);
         }
 
         @Override
         public void loop() {
 
-            if(FaceSDKBase.faceMode == FaceSDKBase.MODE_PREVIEW)
-            {
+            if (FaceSDKBase.faceMode == FaceSDKBase.MODE_PREVIEW) {
                 mImageNV21 = null;
                 return;
             }
-            if (mImageNV21 != null)
-            {
+            if (mImageNV21 != null) {
                 final int rotate = mCameraRotate;
 
                 long time = System.currentTimeMillis();
@@ -106,7 +106,7 @@ public class FaceSDKArc extends FaceSDKBase {
                 for (FaceDB.FaceRegist fr : mResgist) {
                     for (AFR_FSDKFace face : fr.mFaceList.values()) {
                         error = engine.AFR_FSDK_FacePairMatching(result, face, score);
-                        Log.d(TAG,  "Score:" + score.getScore() + ", AFR_FSDK_FacePairMatching=" + error.getCode());
+                        Log.d(TAG, "Score:" + score.getScore() + ", AFR_FSDK_FacePairMatching=" + error.getCode());
                         if (max < score.getScore()) {
                             max = score.getScore();
                             name = fr.mName;
@@ -122,9 +122,9 @@ public class FaceSDKArc extends FaceSDKBase {
                 ASAE_FSDKError error1 = mAgeEngine.ASAE_FSDK_AgeEstimation_Image(mImageNV21, mWidth, mHeight, AFT_FSDKEngine.CP_PAF_NV21, face1, ages);
                 ASGE_FSDKError error2 = mGenderEngine.ASGE_FSDK_GenderEstimation_Image(mImageNV21, mWidth, mHeight, AFT_FSDKEngine.CP_PAF_NV21, face2, genders);
                 Log.d(TAG, "ASAE_FSDK_AgeEstimation_Image:" + error1.getCode() + ",ASGE_FSDK_GenderEstimation_Image:" + error2.getCode());
-               // Log.d(TAG, "age:" + ages.get(0).getAge() + ",gender:" + genders.get(0).getGender());
-              //  final String age = ages.get(0).getAge() == 0 ? "年龄未知" : ages.get(0).getAge() + "岁";
-              //  final String gender = genders.get(0).getGender() == -1 ? "性别未知" : (genders.get(0).getGender() == 0 ? "男" : "女");
+                // Log.d(TAG, "age:" + ages.get(0).getAge() + ",gender:" + genders.get(0).getGender());
+                //  final String age = ages.get(0).getAge() == 0 ? "年龄未知" : ages.get(0).getAge() + "岁";
+                //  final String gender = genders.get(0).getGender() == -1 ? "性别未知" : (genders.get(0).getGender() == 0 ? "男" : "女");
 
                 //crop
                 byte[] data = mImageNV21;
@@ -139,11 +139,10 @@ public class FaceSDKArc extends FaceSDKBase {
                 }
 
 
-                if(FaceSDKBase.faceMode == FaceSDKBase.MODE_REGISTR)
-                {
-                        MyApplication app = (MyApplication) MyApplication.getAppContext();
+                if (FaceSDKBase.faceMode == FaceSDKBase.MODE_REGISTR) {
+                    MyApplication app = (MyApplication) MyApplication.getAppContext();
                     //   app.mFaceDB.addFace("moon1234", result, bmp);
-                    if(iListener!=null){
+                    if (iListener != null) {
                         iListener.FaceDidRegister(bmp);
                     }
                     mImageNV21 = null;
@@ -172,8 +171,8 @@ public class FaceSDKArc extends FaceSDKBase {
 //                        }
 //                    });
 
-                    if(iListener!=null){
-                     iListener.FaceDidDetect(mNameShow,max_score,bmp);
+                    if (iListener != null) {
+                        iListener.FaceDidDetect(mNameShow, max_score, bmp);
                     }
                 } else {
                     final String mNameShow = "未识别";
@@ -192,11 +191,11 @@ public class FaceSDKArc extends FaceSDKBase {
 //                            mImageView.setImageBitmap(bmp);
 //                        }
 //                    });
-                    if(iListener!=null){
+                    if (iListener != null) {
                         iListener.FaceDidFail(bmp);
                     }
                 }
-               mImageNV21 = null;
+                mImageNV21 = null;
             }
 
         }
@@ -207,13 +206,12 @@ public class FaceSDKArc extends FaceSDKBase {
             Log.d(TAG, "AFR_FSDK_UninitialEngine : " + error.getCode());
         }
     }
-    public void init()
-    {
+
+    public void init() {
         mWidth = 1280;
         mHeight = 960;
         mFormat = ImageFormat.NV21;
-        MyApplication app = (MyApplication) MyApplication.getAppContext();
-        app.mFaceDB.loadFaces();
+
 
         AFT_FSDKError err = engine.AFT_FSDK_InitialFaceEngine(com.moonma.FaceSDK.FaceDB.appid, com.moonma.FaceSDK.FaceDB.ft_key, AFT_FSDKEngine.AFT_OPF_0_HIGHER_EXT, 16, 5);
         Log.d(TAG, "AFT_FSDK_InitialFaceEngine =" + err.getCode());
@@ -234,18 +232,6 @@ public class FaceSDKArc extends FaceSDKBase {
         mFRAbsLoop.start();
     }
 
-    public  void registerFace(String name,Bitmap bmp)
-    {
-     if(mFRAbsLoop!=null){
-         mFRAbsLoop.registerFace(name,bmp);
-     }
-    }
-
-    public  void deleteAllFace()
-    {
-        MyApplication app = (MyApplication) MyApplication.getAppContext();
-        app.mFaceDB.deleteAll();
-    }
 
     public Object onPreview(byte[] data, int width, int height, int format, long timestamp) {
         AFT_FSDKError err = engine.AFT_FSDK_FaceFeatureDetect(data, width, height, AFT_FSDKEngine.CP_PAF_NV21, result);

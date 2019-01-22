@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.moonma.common.UIView;
-import com.moonma.facelock.R;
 
 public class UIViewController {
     public UIView view;
