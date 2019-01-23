@@ -71,42 +71,40 @@ public class UIRegister extends UIView implements View.OnClickListener, UICamera
 
     public void doRegister(Bitmap bmp) {
         Activity ac = Common.getMainActivity();
-
-        int ret = uiCamera.faceSDKCommon.CheckRegisterFace(bmp);
-        if (ret != FaceSDKBase.MSG_EVENT_REG) {
-            switch (ret)
-            {
-                case FaceSDKBase.MSG_EVENT_NO_FEATURE:
-                {
-                    Toast.makeText(ac, "人脸特征无法检测，请换一张图片", Toast.LENGTH_SHORT).show();
-                }
-                    break;
-                case FaceSDKBase.MSG_EVENT_NO_FACE:
-                {
-                    Toast.makeText(ac, "没有检测到人脸，请换一张图片", Toast.LENGTH_SHORT).show();
-                }
-                break;
-                case FaceSDKBase.MSG_EVENT_FD_ERROR:
-                {
-                    Toast.makeText(ac, "FD初始化失败" , Toast.LENGTH_SHORT).show();
-                }
-                break;
-
-                case FaceSDKBase.MSG_EVENT_FR_ERROR:
-                {
-                    Toast.makeText(ac, "FR初始化失败" , Toast.LENGTH_SHORT).show();
-                }
-                break;
-                case FaceSDKBase.MSG_EVENT_IMG_ERROR:
-                {
-                    Toast.makeText(ac, "图像格式错误" , Toast.LENGTH_SHORT).show();
-                }
-                break;
-            }
+        if(ac==null)
+        {
             return;
         }
+        if (uiCamera.faceSDKCommon != null) {
+            int ret = uiCamera.faceSDKCommon.CheckRegisterFace(bmp);
+            if (ret != FaceSDKBase.MSG_EVENT_REG) {
+                switch (ret) {
+                    case FaceSDKBase.MSG_EVENT_NO_FEATURE: {
+                        Toast.makeText(ac, "人脸特征无法检测，请换一张图片", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                    case FaceSDKBase.MSG_EVENT_NO_FACE: {
+                        Toast.makeText(ac, "没有检测到人脸，请换一张图片", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                    case FaceSDKBase.MSG_EVENT_FD_ERROR: {
+                        Toast.makeText(ac, "FD初始化失败", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
 
+                    case FaceSDKBase.MSG_EVENT_FR_ERROR: {
+                        Toast.makeText(ac, "FR初始化失败", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                    case FaceSDKBase.MSG_EVENT_IMG_ERROR: {
+                        Toast.makeText(ac, "图像格式错误", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                }
+                return;
+            }
 
+        }
         LayoutInflater inflater = LayoutInflater.from(ac);
         View layout = inflater.inflate(R.layout.dialog_register, null);
 

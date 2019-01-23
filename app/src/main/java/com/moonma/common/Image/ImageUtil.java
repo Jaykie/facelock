@@ -9,10 +9,13 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Size;
+
+import java.io.File;
 
 public class ImageUtil {
     static private final String TAG = "ImageUtil";
@@ -76,5 +79,23 @@ public class ImageUtil {
         //((Application)(MainActivity.this.getApplicationContext())).setCaptureImage(uri);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         ac.startActivityForResult(intent, REQUEST_CODE_CAMERA);
+    }
+
+    //https://blog.csdn.net/ak4100/article/details/52933923
+    //调用相机
+    public void takephoto(){
+        Activity ac = Common.getMainActivity();
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "temp.jpg")));
+        ac.startActivityForResult(intent, REQUEST_CODE_CAMERA);
+
+    }
+
+    //调用相册
+    public void OpenGallery() {
+        Activity ac = Common.getMainActivity();
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        ac.startActivityForResult(intent, REQUEST_CODE_IMAGE);
     }
 }

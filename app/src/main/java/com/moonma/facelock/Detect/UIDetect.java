@@ -8,8 +8,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.nfc.Tag;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +36,7 @@ import com.moonma.FaceSDK.IFaceDBBaseListener;
  */
 public class UIDetect extends UIView implements View.OnClickListener ,UICamera.OnUICameraListener
 {
+    private final String TAG = this.getClass().getSimpleName();
     public UICamera uiCamera;
 
     private TextView textTitle;
@@ -52,6 +55,8 @@ public class UIDetect extends UIView implements View.OnClickListener ,UICamera.O
         textDetail = (TextView) findViewById(R.id.text_detail);
         //textDetail.setText("");
         imageFace = (ImageView) findViewById(R.id.imageFace);
+        Log.d(TAG,"isHardwareAccelerated:"+imageFace.isHardwareAccelerated());
+
 
     }
 

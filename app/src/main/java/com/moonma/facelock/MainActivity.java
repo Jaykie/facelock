@@ -21,6 +21,7 @@ import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.moonma.common.Common;
 import com.moonma.common.ImageUtil;
@@ -57,6 +58,10 @@ public class MainActivity extends MainActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //
+
+       // getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 
         FaceDBCommon.main().createSDK(Source.FACE_ARC);
 

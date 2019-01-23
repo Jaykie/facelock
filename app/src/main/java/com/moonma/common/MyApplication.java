@@ -33,18 +33,19 @@ public class MyApplication extends android.app.Application {
         @Override
         public void onActivityStarted(Activity activity) {
             Log.d(TAG, "onActivityStarted :" + activity);
-            mainActivity = activity;
+          mainActivity = activity;
         }
 
         @Override
         public void onActivityResumed(Activity activity) {
 
-            mainActivity = activity;
+         //  mainActivity = activity;
         }
 
         @Override
         public void onActivityPaused(Activity activity) {
-            mainActivity = null;
+
+
         }
 
         @Override
