@@ -102,6 +102,16 @@ public class UIRegister extends UIView implements View.OnClickListener ,UICamera
     public void CameraDidRegisterFace(UICamera ui, Bitmap bmp) {
         doRegister(bmp);
     }
+    @Override
+    public void CameraDidDetect(String name, float score , Bitmap bmp){
+
+
+    }
+    @Override
+    public void CameraDetectFail(Bitmap bmp)
+    {
+
+    }
 
     @Override
     public void onClick(View view) {

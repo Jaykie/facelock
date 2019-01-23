@@ -57,6 +57,8 @@ public class UICamera extends UIView
 
     public interface OnUICameraListener {
         public void CameraDidRegisterFace(UICamera ui, Bitmap bmp);
+        public void CameraDidDetect(String name, float score , Bitmap bmp);
+        public void CameraDetectFail(Bitmap bmp);
     }
 
     public UICamera(int layoutId, UIView parent) {
@@ -233,30 +235,16 @@ public class UICamera extends UIView
 
     @Override
     public void FaceDidDetect(String name, float score, Bitmap bmp) {
-
-//        mHandler.removeCallbacks(hide);
-//        final String mNameShow = name;
-//        final float max_score= score;
-//        final Bitmap bmp_show = bmp;
-//        mHandler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//            }
-//        });
+        if (mListener != null) {
+            mListener.CameraDidDetect(name,score,bmp);
+        }
     }
 
     @Override
     public void FaceDidFail(Bitmap bmp) {
-        final String mNameShow = "未识别";
-        final Bitmap bmp_show = bmp;
-        Activity ac = Common.getMainActivity();
-        ac.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
+        if (mListener != null) {
+            mListener.CameraDetectFail(bmp);
+        }
     }
 
     @Override

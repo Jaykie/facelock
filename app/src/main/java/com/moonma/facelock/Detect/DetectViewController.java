@@ -6,6 +6,7 @@ import android.view.View;
 import com.moonma.common.UIDetect;
 import com.moonma.common.UIView;
 import com.moonma.common.UIViewController;
+import com.moonma.FaceSDK.FaceSDKBase;
 
 public class DetectViewController extends UIViewController {
     UIDetect ui;
@@ -36,5 +37,6 @@ public class DetectViewController extends UIViewController {
         ui = new UIDetect(retId, view);
         view.addView(ui);
         ui.uiCamera = uiCamera;
+        uiCamera.setMode(FaceSDKBase.MODE_DETECT);
     }
 }
