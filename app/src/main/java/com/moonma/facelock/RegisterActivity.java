@@ -43,6 +43,7 @@ import com.guo.android_extend.image.ImageConverter;
 import com.guo.android_extend.widget.ExtImageView;
 import com.guo.android_extend.widget.HListView;
 import com.guo.android_extend.widget.controller.ImageController;
+import com.moonma.common.ImageUtil;
 import com.moonma.common.MyApplication;
 
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public class RegisterActivity extends Activity implements SurfaceHolder.Callback
 		mHListView.setOnItemClickListener(mRegisterViewAdapter);
 
 		mUIHandler = new UIHandler();
-		mBitmap = MyApplication.decodeImage(mFilePath);
+		mBitmap = ImageUtil.DecodeImage(mFilePath);
 		src.set(0,0,mBitmap.getWidth(),mBitmap.getHeight());
 		mSurfaceView = (SurfaceView)this.findViewById(R.id.surfaceView);
 		mSurfaceView.getHolder().addCallback(this);

@@ -61,6 +61,10 @@ public class FaceSDKCommon  implements IFaceSDKBaseListener {
     public Object onPreview(byte[] data, int width, int height, int format, long timestamp) {
             return  faceSDK.onPreview(data,width,height,format,timestamp);
     }
+
+    public int CheckRegisterFace(Bitmap bmp) {
+        return faceSDK.CheckRegisterFace(bmp);
+    }
     @Override
     public void FaceDidDetect(String name, float score , Bitmap bmp) {
         if(iListener!=null){

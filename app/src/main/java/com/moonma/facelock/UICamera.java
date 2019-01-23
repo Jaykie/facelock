@@ -52,7 +52,7 @@ public class UICamera extends UIView
     ImageButton btnCamSelect;
 
     //FACESDK
-    FaceSDKCommon faceSDKCommon;
+    public FaceSDKCommon faceSDKCommon;
     public OnUICameraListener mListener;
 
     public interface OnUICameraListener {

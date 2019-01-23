@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.moonma.common.Common;
+import com.moonma.common.ImageUtil;
 import com.moonma.common.MyApplication;
 import com.moonma.common.MainActivityBase;
 import com.moonma.common.Source;
@@ -30,6 +31,8 @@ import com.moonma.common.TabBarItemInfo;
 import com.moonma.common.TabBarViewController;
 import com.moonma.facelock.RegisterViewController;
 import com.moonma.facelock.DetectViewController;
+import com.moonma.facelock.SettingViewController;
+
 import com.moonma.FaceSDK.FaceDBCommon;
 import com.moonma.FaceSDK.FaceSDKCommon;
 
@@ -38,8 +41,6 @@ import java.util.List;
 
 public class MainActivity extends MainActivityBase {
     private final String TAG = this.getClass().toString();
-    private static final int REQUEST_CODE_IMAGE_CAMERA = 1;
-    private static final int REQUEST_CODE_IMAGE_OP = 2;
     private static final int REQUEST_CODE_OP = 3;
 
 
@@ -141,6 +142,13 @@ public class MainActivity extends MainActivityBase {
             tab.addItem(info);
         }
 
+        {
+            TabBarItemInfo info = new TabBarItemInfo();
+            info.title = Common.stringFromResId(R.string.setting);
+            info.controller = SettingViewController.main();
+            tab.addItem(info);
+        }
+
         tab.selectItem(0);
 
 //            startRegister();
@@ -155,43 +163,44 @@ public class MainActivity extends MainActivityBase {
     }
 
     private void startRegister() {
-        new AlertDialog.Builder(this)
-                .setTitle("请选择注册方式")
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .setItems(new String[]{"打开图片", "拍摄照片"}, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 1:
-                                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-                                ContentValues values = new ContentValues(1);
-                                values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-                                Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                                //  ((MyApplication) (MainActivity.this.getApplicationContext())).setCaptureImage(uri);
-                                FaceSDKCommon.main().setCaptureImage(uri);
-                                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                                startActivityForResult(intent, REQUEST_CODE_IMAGE_CAMERA);
-                                break;
-                            case 0:
-                                Intent getImageByalbum = new Intent(Intent.ACTION_GET_CONTENT);
-                                getImageByalbum.addCategory(Intent.CATEGORY_OPENABLE);
-                                getImageByalbum.setType("image/jpeg");
-                                startActivityForResult(getImageByalbum, REQUEST_CODE_IMAGE_OP);
-                                break;
-                            default:
-                                ;
-                        }
-                    }
-                })
-                .show();
+//        new AlertDialog.Builder(this)
+//                .setTitle("请选择注册方式")
+//                .setIcon(android.R.drawable.ic_dialog_info)
+//                .setItems(new String[]{"打开图片", "拍摄照片"}, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        switch (which) {
+//                            case 1:
+//                                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+//                                ContentValues values = new ContentValues(1);
+//                                values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+//                                Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+//                                //  ((MyApplication) (MainActivity.this.getApplicationContext())).setCaptureImage(uri);
+//                                FaceSDKCommon.main().setCaptureImage(uri);
+//                                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+//                                startActivityForResult(intent, REQUEST_CODE_IMAGE_CAMERA);
+//                                break;
+//                            case 0:
+//                                Intent getImageByalbum = new Intent(Intent.ACTION_GET_CONTENT);
+//                                getImageByalbum.addCategory(Intent.CATEGORY_OPENABLE);
+//                                getImageByalbum.setType("image/jpeg");
+//                                startActivityForResult(getImageByalbum, REQUEST_CODE_IMAGE_OP);
+//                                break;
+//                            default:
+//                                ;
+//                        }
+//                    }
+//                })
+//                .show();
     }
 
-    private void startRegister(Bitmap mBitmap, String file) {
-        Intent it = new Intent(this, RegisterActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("imagePath", file);
-        it.putExtras(bundle);
-        startActivityForResult(it, REQUEST_CODE_OP);
+    private void startRegister(Bitmap bmp, String file) {
+//        Intent it = new Intent(this, RegisterActivity.class);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("imagePath", file);
+//        it.putExtras(bundle);
+//        startActivityForResult(it, REQUEST_CODE_OP);
+        RegisterViewController.main().ui.doRegister(bmp);
     }
 
     /**
@@ -316,10 +325,10 @@ public class MainActivity extends MainActivityBase {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CODE_IMAGE_OP && resultCode == RESULT_OK) {
+        if (requestCode == ImageUtil.REQUEST_CODE_IMAGE && resultCode == RESULT_OK) {
             Uri mPath = data.getData();
             String file = getPath(mPath);
-            Bitmap bmp = MyApplication.decodeImage(file);
+            Bitmap bmp = ImageUtil.DecodeImage(file);
             if (bmp == null || bmp.getWidth() <= 0 || bmp.getHeight() <= 0) {
                 Log.e(TAG, "error");
             } else {
@@ -334,11 +343,11 @@ public class MainActivity extends MainActivityBase {
             Bundle bundle = data.getExtras();
             String path = bundle.getString("imagePath");
             Log.i(TAG, "path=" + path);
-        } else if (requestCode == REQUEST_CODE_IMAGE_CAMERA && resultCode == RESULT_OK) {
+        } else if (requestCode == ImageUtil.REQUEST_CODE_CAMERA && resultCode == RESULT_OK) {
             // Uri mPath = ((MyApplication) (this.getApplicationContext())).getCaptureImage();
             Uri mPath = FaceSDKCommon.main().getCaptureImage();
             String file = getPath(mPath);
-            Bitmap bmp = MyApplication.decodeImage(file);
+            Bitmap bmp = ImageUtil.DecodeImage(file);
             startRegister(bmp, file);
         }
     }

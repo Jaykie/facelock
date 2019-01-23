@@ -31,6 +31,16 @@
             android:layout_weight="1"
             android:contentDescription="cancel"
             app:srcCompat="@android:drawable/ic_menu_delete" />
+
+
+        <ImageButton
+            android:id="@+id/BtnOpenImageLib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="open"
+            app:srcCompat="@android:drawable/ic_menu_gallery" />
+
     </LinearLayout>
 
     <LinearLayout

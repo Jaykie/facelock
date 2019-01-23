@@ -20,9 +20,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.guo.android_extend.GLES2Render;
 import com.guo.android_extend.widget.ExtImageView;
+import com.moonma.common.ImageUtil;
 import com.moonma.common.UIView;
 import com.moonma.facelock.R;
 
@@ -38,11 +40,12 @@ import com.moonma.facelock.UICamera;
 /**
  * TODO: document your custom view class.
  */
-public class UIRegister extends UIView implements View.OnClickListener ,UICamera.OnUICameraListener{
+public class UIRegister extends UIView implements View.OnClickListener, UICamera.OnUICameraListener {
     public UICamera uiCamera;
 
     private ImageButton btnRegister;
     private ImageButton btnDelAll;
+    private ImageButton btnOpenImageLib;
 
     private EditText mEditText;
     private ExtImageView mExtImageView;
@@ -56,6 +59,9 @@ public class UIRegister extends UIView implements View.OnClickListener ,UICamera
         btnRegister.setOnClickListener(this);
         btnDelAll = (ImageButton) findViewById(R.id.BtnDelAll);
         btnDelAll.setOnClickListener(this);
+
+        btnOpenImageLib = (ImageButton) findViewById(R.id.BtnOpenImageLib);
+        btnOpenImageLib.setOnClickListener(this);
     }
 
     void OnFaceRegister() {
@@ -63,8 +69,44 @@ public class UIRegister extends UIView implements View.OnClickListener ,UICamera
         uiCamera.setMode(FaceSDKBase.MODE_REGISTR);
     }
 
-    void doRegister(Bitmap bmp) {
+    public void doRegister(Bitmap bmp) {
         Activity ac = Common.getMainActivity();
+
+        int ret = uiCamera.faceSDKCommon.CheckRegisterFace(bmp);
+        if (ret != FaceSDKBase.MSG_EVENT_REG) {
+            switch (ret)
+            {
+                case FaceSDKBase.MSG_EVENT_NO_FEATURE:
+                {
+                    Toast.makeText(ac, "人脸特征无法检测，请换一张图片", Toast.LENGTH_SHORT).show();
+                }
+                    break;
+                case FaceSDKBase.MSG_EVENT_NO_FACE:
+                {
+                    Toast.makeText(ac, "没有检测到人脸，请换一张图片", Toast.LENGTH_SHORT).show();
+                }
+                break;
+                case FaceSDKBase.MSG_EVENT_FD_ERROR:
+                {
+                    Toast.makeText(ac, "FD初始化失败" , Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+                case FaceSDKBase.MSG_EVENT_FR_ERROR:
+                {
+                    Toast.makeText(ac, "FR初始化失败" , Toast.LENGTH_SHORT).show();
+                }
+                break;
+                case FaceSDKBase.MSG_EVENT_IMG_ERROR:
+                {
+                    Toast.makeText(ac, "图像格式错误" , Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+            return;
+        }
+
+
         LayoutInflater inflater = LayoutInflater.from(ac);
         View layout = inflater.inflate(R.layout.dialog_register, null);
 
@@ -102,14 +144,15 @@ public class UIRegister extends UIView implements View.OnClickListener ,UICamera
     public void CameraDidRegisterFace(UICamera ui, Bitmap bmp) {
         doRegister(bmp);
     }
+
     @Override
-    public void CameraDidDetect(String name, float score , Bitmap bmp){
+    public void CameraDidDetect(String name, float score, Bitmap bmp) {
 
 
     }
+
     @Override
-    public void CameraDetectFail(Bitmap bmp)
-    {
+    public void CameraDetectFail(Bitmap bmp) {
 
     }
 
@@ -122,6 +165,10 @@ public class UIRegister extends UIView implements View.OnClickListener ,UICamera
 
         if (view.getId() == R.id.BtnDelAll) {
             FaceDBCommon.main().deleteAllFace();
+        }
+
+        if (view.getId() == R.id.BtnOpenImageLib) {
+            ImageUtil.OpenSystemImageLib();
         }
 
     }
